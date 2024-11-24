@@ -23,6 +23,7 @@ snake = [[400, 400], [360, 400], [320,400]]
 
 locatieXY = [0,0]
 direction = [0,0]
+lastdirection = [0,0]
 speed = 5
 gameover = False
 snakecolor = "blue"
@@ -36,13 +37,13 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_a:
-                direction = direction if direction[0] == 1 else [-1, 0]
+                direction = direction if lastdirection[0] == 1 else [-1, 0]
             if event.key == pygame.K_d:
-                direction = direction if direction[0] == -1 else [1, 0]
+                direction = direction if lastdirection[0] == -1 else [1, 0]
             if event.key == pygame.K_w:
-                direction = direction if direction[1] == 1 else [0, -1]
+                direction = direction if lastdirection[1] == 1 else [0, -1]
             if event.key == pygame.K_s:
-                direction = direction if direction[1] == -1 else [0, 1]
+                direction = direction if lastdirection[1] == -1 else [0, 1]
 
     screen.fill("purple")
 
@@ -89,6 +90,7 @@ while running:
 
             if not gameover:
                 snake = [frontBlock] + snakenotail
+                lastdirection = direction
 
         for block in snake:
             drawblock("blue", block)
@@ -101,9 +103,11 @@ while running:
         snakecolor = color
 
         my_font = pygame.font.SysFont('Comic Sans MS', 60)
-        text_surface = my_font.render("Game Over", False, (255, 255, 255))
+        gameover = my_font.render("Game Over", False, (255, 255, 255))
+        highscore = my_font.render("Je score = " + str(int(speed * len(snake))), False, (255, 255, 255))
 
-        screen.blit(text_surface, (screenWidth / 2 - text_surface.get_size()[0] / 2, screenHeight / 2 - text_surface.get_size()[1] / 2))
+        screen.blit(gameover, (screenWidth / 2 - gameover.get_size()[0] / 2, screenHeight / 2 - gameover.get_size()[1]))
+        screen.blit(highscore, (screenWidth / 2 - highscore.get_size()[0] / 2, screenHeight / 2 + gameover.get_size()[1] / 2))
 
     display.flip()
     #clock.tick(60)
